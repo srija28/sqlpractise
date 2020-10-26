@@ -1,0 +1,154 @@
+Address book sql commands
+
+UC1
+
+mysql> create database addressbook_service;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use addressbook_service;
+Database changed
+
+UC2
+
+mysql> create table addressbook(
+    -> firstname varchar(50) NOT NULL,
+    -> last_name varchar(50) NOT NULL,
+    -> address varchar(250) NOT NULL,
+    -> city varchar(100) NOT NULL,
+    -> state varchar(100) NOT NULL,
+    -> zip int unsigned NOT NULL,
+    -> phone int NOT NULL,
+    -> email varchar(250) NOT NULL);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> describe addressbook
+    -> ;
++-----------+------------------+------+-----+---------+-------+
+| Field     | Type             | Null | Key | Default | Extra |
++-----------+------------------+------+-----+---------+-------+
+| firstname | varchar(50)      | NO   |     | NULL    |       |
+| last_name | varchar(50)      | NO   |     | NULL    |       |
+| address   | varchar(250)     | NO   |     | NULL    |       |
+| city      | varchar(100)     | NO   |     | NULL    |       |
+| state     | varchar(100)     | NO   |     | NULL    |       |
+| zip       | int(10) unsigned | NO   |     | NULL    |       |
+| phone     | int(11)          | NO   |     | NULL    |       |
+| email     | varchar(250)     | NO   |     | NULL    |       |
++-----------+------------------+------+-----+---------+-------+
+8 rows in set (0.01 sec)
+
+UC3
+
+mysql> insert into addressbook values ('shreya','reddy','miyapur','hyd','telangana','500049','91887766','shreya@gmail.com'), ('srija','reddy','county','hyd','telangana','500079','3456789','srija@gmail.com'), ('sriku','reddy','miyapur','hyd','telangana','500089','4567890','sriku@gmail.com'), ('srujana','reddy','dbg','vijaywada','ap','500098','59133342','sru@gmail.com'), ('ragava','reddy','dbg','eluru','ap','567890','49799922','rag@gmail.com');
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+UC4
+
+mysql> update addressbook set city = 'mumbai' where firstname = 'sriku';
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+UC5
+
+mysql> delete from addressbook where firstname='ragava';
+Query OK, 1 row affected (0.00 sec)
+
+UC6
+mysql> select * from addressbook where city = 'hyd';
++-----------+-----------+---------+------+-----------+--------+----------+------------------+
+| firstname | last_name | address | city | state     | zip    | phone    | email            |
++-----------+-----------+---------+------+-----------+--------+----------+------------------+
+| shreya    | reddy     | miyapur | hyd  | telangana | 500049 | 91887766 | shreya@gmail.com |
+| srija     | reddy     | county  | hyd  | telangana | 500079 |  3456789 | srija@gmail.com  |
++-----------+-----------+---------+------+-----------+--------+----------+------------------+
+2 rows in set (0.00 sec)
+mysql> select * from addressbook where state = 'telangana';
++-----------+-----------+---------+--------+-----------+--------+----------+------------------+
+| firstname | last_name | address | city   | state     | zip    | phone    | email            |
++-----------+-----------+---------+--------+-----------+--------+----------+------------------+
+| shreya    | reddy     | miyapur | hyd    | telangana | 500049 | 91887766 | shreya@gmail.com |
+| srija     | reddy     | county  | hyd    | telangana | 500079 |  3456789 | srija@gmail.com  |
+| sriku     | reddy     | miyapur | mumbai | telangana | 500089 |  4567890 | sriku@gmail.com  |
++-----------+-----------+---------+--------+-----------+--------+----------+------------------+
+3 rows in set (0.00 sec)
+
+UC7
+mysql> select city,count(city) from addressbook group by city;
++-----------+-------------+
+| city      | count(city) |
++-----------+-------------+
+| hyd       |           2 |
+| mumbai    |           1 |
+| vijaywada |           1 |
++-----------+-------------+
+3 rows in set (0.01 sec)
+
+mysql> select state,count(state) from addressbook group by state;
++-----------+--------------+
+| state     | count(state) |
++-----------+--------------+
+| telangana |            3 |
+| ap        |            1 |
++-----------+--------------+
+2 rows in set (0.00 sec)
+
+UC8
+
+mysql> select * from addressbook where city = 'hyd' order by firstname;
++-----------+-----------+---------+------+-----------+--------+----------+------------------+
+| firstname | last_name | address | city | state     | zip    | phone    | email            |
++-----------+-----------+---------+------+-----------+--------+----------+------------------+
+| shreya    | reddy     | miyapur | hyd  | telangana | 500049 | 91887766 | shreya@gmail.com |
+| srija     | reddy     | county  | hyd  | telangana | 500079 |  3456789 | srija@gmail.com  |
++-----------+-----------+---------+------+-----------+--------+----------+------------------+
+2 rows in set (0.00 sec)
+
+UC9
+
+mysql> alter table addressbook add name varchar(250);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+mysql> alter table addressbook add type varchar(250);
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+UC10
+
+mysql> insert into addressbook values ('sruthi','regala','county','banglore','karnataka','500079','4567890','sruthi@gmail.com','joint family','friend');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select type, count(type) from addressbook group by type;
++--------+-------------+
+| type   | count(type) |
++--------+-------------+
+| NULL   |           0 |
+| friend |           1 |
++--------+-------------+
+2 rows in set (0.00 sec)
+
+UC11
+
+mysql> insert into addressbook values
+    -> ('vennela','sankendla','wanap','hyd','telangana','500069','67896789','ven@gmail.com','small family','Friend'),
+    -> ('swathi','reddy','tembling',chennai','tn','789789',78907890','swa@gmail.com','small family','family');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '','tn','789789',78907890','swa@gmail.com','small family','family')' at line 3
+mysql> insert into addressbook values ('vennela','sankendla','wanap','hyd','telangana','500069','67896789','ven@gmail.com','small family','Friend'), ('swathi','reddy','tembling','chennai','tn','789789','78907890','swa@gmail.com','small family','family');
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select * from addressbook
+    -> ;
++-----------+-----------+----------+-----------+-----------+--------+----------+------------------+--------------+--------+
+| firstname | last_name | address  | city      | state     | zip    | phone    | email            | name         | type   |
++-----------+-----------+----------+-----------+-----------+--------+----------+------------------+--------------+--------+
+| shreya    | reddy     | miyapur  | hyd       | telangana | 500049 | 91887766 | shreya@gmail.com | NULL         | NULL   |
+| srija     | reddy     | county   | hyd       | telangana | 500079 |  3456789 | srija@gmail.com  | NULL         | NULL   |
+| sriku     | reddy     | miyapur  | mumbai    | telangana | 500089 |  4567890 | sriku@gmail.com  | NULL         | NULL   |
+| srujana   | reddy     | dbg      | vijaywada | ap        | 500098 | 59133342 | sru@gmail.com    | NULL         | NULL   |
+| sruthi    | regala    | county   | banglore  | karnataka | 500079 |  4567890 | sruthi@gmail.com | joint family | friend |
+| vennela   | sankendla | wanap    | hyd       | telangana | 500069 | 67896789 | ven@gmail.com    | small family | Friend |
+| swathi    | reddy     | tembling | chennai   | tn        | 789789 | 78907890 | swa@gmail.com    | small family | family |
++-----------+-----------+----------+-----------+-----------+--------+----------+------------------+--------------+--------+
+7 rows in set (0.00 sec)
+
